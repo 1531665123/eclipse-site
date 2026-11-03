@@ -5,20 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Eclipse is a low-poly FPS RPG with lootable objects, an evolving world, dynamic matches and tight gunplay. Windows, in development.">
 <title>Eclipse</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-  /* Layout: full-bleed dusty hero, then a narrow 1100px column; single dark theme, lit by the planet's orange haze. */
+  /* Layout: full-bleed hero over a starfield, then a narrow 1100px column; single near-black theme, white type, no color accent. */
   :root {
-    --bg: #15110e;
-    --bg-2: #1e1813;
-    --ink: #efe6d8;
-    --ink-dim: #a8998a;
-    --line: #3a2e24;
-    --dust: #d8843a;
-    --dust-deep: #9b4f1b;
-    --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
-    --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --bg: #07070a;
+    --bg-2: #0f0f14;
+    --ink: #f4f4f7;
+    --ink-dim: #8c8d99;
+    --line: #22232c;
+    --dust: #f4f4f7;
+    --dust-deep: #c9cad4;
+    --star: rgba(244,244,247,.9);
+    --display: "Michroma", "Segoe UI", system-ui, sans-serif;
+    --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
@@ -31,12 +32,12 @@
   p { margin: 0; }
   .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   .wrap { max-width: 1100px; margin-inline: auto; }
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dust); }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-dim); }
 
   /* Nav */
   .nav { position: absolute; inset: 0 0 auto; z-index: 5; padding-block: 18px; }
   .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--display); font-weight: 700; letter-spacing: .18em; font-size: 15px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--display); font-weight: 400; letter-spacing: .24em; font-size: 13px; }
   .brand img { width: 28px; height: 28px; }
   .nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 22px; }
   .nav a:not(.brand) { color: var(--ink-dim); text-decoration: none; font-size: 14px; font-family: var(--mono); letter-spacing: .06em; }
@@ -44,54 +45,55 @@
 
   /* Hero */
   .hero { position: relative; min-height: 560px; display: grid; align-items: end; overflow: hidden; isolation: isolate; }
-  .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; z-index: -2; }
+  .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; z-index: -2; filter: grayscale(1) contrast(1.1) brightness(.75); }
+  .stars { position: fixed; inset: 0; z-index: -3; width: 100%; height: 100%; pointer-events: none; }
   .hero::after { content: ""; position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(180deg, rgba(21,17,14,.45) 0%, rgba(21,17,14,0) 35%, rgba(21,17,14,.55) 70%, var(--bg) 100%); }
+    background: linear-gradient(180deg, rgba(7,7,10,.55) 0%, rgba(7,7,10,.1) 35%, rgba(7,7,10,.7) 70%, var(--bg) 100%); }
   .hero .wrap { width: 100%; padding-block: 120px 56px; display: grid; gap: 22px; }
   .hero .logo { width: 110px; height: 110px; filter: drop-shadow(0 6px 24px rgba(0,0,0,.45)); }
-  .hero h1 { font-size: clamp(56px, 11vw, 128px); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; line-height: .95; }
+  .hero h1 { font-size: clamp(40px, 8.5vw, 104px); font-weight: 400; letter-spacing: .22em; text-transform: uppercase; line-height: 1; }
   .hero .lede { font-size: clamp(18px, 2.2vw, 22px); max-width: 34em; color: var(--ink); text-shadow: 0 1px 12px rgba(0,0,0,.5); }
   .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 6px; }
-  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; font-family: var(--display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 1px solid var(--dust); border-radius: 3px; transition: background .15s, color .15s; }
-  .btn.primary { background: var(--dust); color: #15110e; }
-  .btn.primary:hover { background: #e8954a; }
-  .btn.ghost { color: var(--ink); border-color: rgba(239,230,216,.35); backdrop-filter: blur(4px); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; font-family: var(--mono); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; text-decoration: none; border: 1px solid var(--ink); border-radius: 999px; transition: background .15s, color .15s; }
+  .btn.primary { background: var(--ink); color: var(--bg); }
+  .btn.primary:hover { background: var(--dust-deep); }
+  .btn.ghost { color: var(--ink); border-color: rgba(244,244,247,.35); backdrop-filter: blur(4px); }
   .btn.ghost:hover { border-color: var(--ink); }
   .status { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); }
-  .status b { color: var(--dust); font-weight: 500; }
+  .status b { color: var(--ink); font-weight: 500; }
 
   /* Sections */
   section { padding-block: 72px; }
   section + section { border-top: 1px solid var(--line); }
   .section-head { display: grid; gap: 10px; margin-bottom: 36px; max-width: 40em; }
-  .section-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: .02em; }
+  .section-head h2 { font-size: clamp(22px, 3.2vw, 32px); font-weight: 400; letter-spacing: .04em; }
   .section-head p { color: var(--ink-dim); }
 
   .about { display: grid; grid-template-columns: 1.2fr .8fr; gap: 48px; align-items: start; }
   .about .text { display: grid; gap: 18px; max-width: 36em; }
-  .spec { font-family: var(--mono); font-size: 14px; border: 1px solid var(--line); background: var(--bg-2); padding: 20px 22px; display: grid; gap: 12px; min-width: 0; }
+  .spec { font-family: var(--mono); font-size: 14px; border: 1px solid var(--line); background: rgba(15,15,20,.7); backdrop-filter: blur(6px); padding: 20px 22px; display: grid; gap: 12px; min-width: 0; }
   .spec div { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--line); padding-bottom: 10px; }
   .spec div:last-child { border-bottom: 0; padding-bottom: 0; }
   .spec span:first-child { color: var(--ink-dim); }
 
   .shots { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
-  .shot { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); min-width: 0; }
+  .shot { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); min-width: 0; border-radius: 6px; }
   .shot img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 9; transition: transform .4s ease; }
   .shot:hover img { transform: scale(1.03); }
-  .shot figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--ink); background: linear-gradient(0deg, rgba(21,17,14,.85), rgba(21,17,14,0)); }
+  .shot figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--ink); background: linear-gradient(0deg, rgba(7,7,10,.85), rgba(7,7,10,0)); }
   .shot.wide { grid-column: span 12; }
   .shot.half { grid-column: span 6; }
   figure { margin: 0; }
 
   .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
-  .feature { background: var(--bg); padding: 26px 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
-  .feature h3 { font-size: 19px; font-weight: 600; letter-spacing: .02em; }
+  .feature { background: var(--bg-2); padding: 26px 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .feature h3 { font-size: 14px; font-weight: 400; letter-spacing: .08em; text-transform: uppercase; }
   .feature p { color: var(--ink-dim); font-size: 15.5px; }
   .feature .glyph { width: 26px; height: 26px; color: var(--dust); }
 
-  .download { background: var(--bg-2); }
+  .download { background: transparent; }
   .download .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
-  .download h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; margin-bottom: 12px; }
+  .download h2 { font-size: clamp(22px, 3.2vw, 32px); font-weight: 400; letter-spacing: .04em; margin-bottom: 12px; }
   .download p { color: var(--ink-dim); max-width: 32em; }
   .reqs { font-family: var(--mono); font-size: 14px; display: grid; gap: 8px; }
   .reqs div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; }
@@ -119,6 +121,7 @@
 </head>
 <body>
 
+<canvas class="stars" id="stars" aria-hidden="true"></canvas>
 <header class="nav gutter">
   <div class="wrap">
     <a class="brand" href="#top"><img src="images/logo.png" alt=""> ECLIPSE</a>
@@ -132,7 +135,7 @@
 </header>
 
 <section class="hero gutter" id="top">
-  <img class="bg" src="images/shot-dust-ridge.jpg" alt="Three armored figures stand on a ridge above a dust-choked orange valley.">
+  <img class="bg" src="images/shot-dust-ridge.jpg" alt="Three armored figures stand on a ridge above a haze-filled valley.">
   <div class="wrap">
     <img class="logo" src="images/logo.png" alt="Eclipse logo">
     <h1>Eclipse</h1>
@@ -258,5 +261,20 @@
     <span><a href="#top">Back to top</a></span>
   </div>
 </footer>
+<script>
+(function(){
+  var c=document.getElementById('stars'); if(!c) return;
+  var ctx=c.getContext('2d'), stars=[], dpr=Math.min(window.devicePixelRatio||1,2);
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){ c.width=innerWidth*dpr; c.height=innerHeight*dpr; stars=[]; var n=Math.floor(innerWidth*innerHeight/6000);
+    for(var i=0;i<n;i++) stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:(Math.random()*1.2+.3)*dpr,a:Math.random(),s:Math.random()*.6+.2}); }
+  function draw(t){ ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='#f4f4f7';
+    for(var i=0;i<stars.length;i++){ var st=stars[i]; var tw=reduce?.7:(.55+.45*Math.sin(t/900*st.s+st.a*6.28));
+      ctx.globalAlpha=tw*.8; ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,6.283); ctx.fill(); }
+    ctx.globalAlpha=1; if(!reduce) requestAnimationFrame(draw); }
+  size(); addEventListener('resize',size); requestAnimationFrame(draw);
+})();
+</script>
+
 </body>
 </html>
