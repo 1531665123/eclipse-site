@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Eclipse is a low-poly FPS RPG with lootable objects, an evolving world, dynamic matches and tight gunplay. Windows, in development.">
+<title>Eclipse</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: full-bleed dusty hero, then a narrow 1100px column; single dark theme, lit by the planet's orange haze. */
+  :root {
+    --bg: #15110e;
+    --bg-2: #1e1813;
+    --ink: #efe6d8;
+    --ink-dim: #a8998a;
+    --line: #3a2e24;
+    --dust: #d8843a;
+    --dust-deep: #9b4f1b;
+    --display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+    --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+  img { max-width: 100%; display: block; }
+  a { color: var(--dust); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--dust); outline-offset: 3px; }
+  h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; text-wrap: balance; }
+  p { margin: 0; }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .wrap { max-width: 1100px; margin-inline: auto; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dust); }
+
+  /* Nav */
+  .nav { position: absolute; inset: 0 0 auto; z-index: 5; padding-block: 18px; }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-family: var(--display); font-weight: 700; letter-spacing: .18em; font-size: 15px; }
+  .brand img { width: 28px; height: 28px; }
+  .nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 22px; }
+  .nav a:not(.brand) { color: var(--ink-dim); text-decoration: none; font-size: 14px; font-family: var(--mono); letter-spacing: .06em; }
+  .nav a:not(.brand):hover { color: var(--ink); }
+
+  /* Hero */
+  .hero { position: relative; min-height: 560px; display: grid; align-items: end; overflow: hidden; isolation: isolate; }
+  .hero img.bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; z-index: -2; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, rgba(21,17,14,.45) 0%, rgba(21,17,14,0) 35%, rgba(21,17,14,.55) 70%, var(--bg) 100%); }
+  .hero .wrap { width: 100%; padding-block: 120px 56px; display: grid; gap: 22px; }
+  .hero .logo { width: 110px; height: 110px; filter: drop-shadow(0 6px 24px rgba(0,0,0,.45)); }
+  .hero h1 { font-size: clamp(56px, 11vw, 128px); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; line-height: .95; }
+  .hero .lede { font-size: clamp(18px, 2.2vw, 22px); max-width: 34em; color: var(--ink); text-shadow: 0 1px 12px rgba(0,0,0,.5); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 6px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; font-family: var(--display); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; text-decoration: none; border: 1px solid var(--dust); border-radius: 3px; transition: background .15s, color .15s; }
+  .btn.primary { background: var(--dust); color: #15110e; }
+  .btn.primary:hover { background: #e8954a; }
+  .btn.ghost { color: var(--ink); border-color: rgba(239,230,216,.35); backdrop-filter: blur(4px); }
+  .btn.ghost:hover { border-color: var(--ink); }
+  .status { font-family: var(--mono); font-size: 13px; color: var(--ink-dim); }
+  .status b { color: var(--dust); font-weight: 500; }
+
+  /* Sections */
+  section { padding-block: 72px; }
+  section + section { border-top: 1px solid var(--line); }
+  .section-head { display: grid; gap: 10px; margin-bottom: 36px; max-width: 40em; }
+  .section-head h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: .02em; }
+  .section-head p { color: var(--ink-dim); }
+
+  .about { display: grid; grid-template-columns: 1.2fr .8fr; gap: 48px; align-items: start; }
+  .about .text { display: grid; gap: 18px; max-width: 36em; }
+  .spec { font-family: var(--mono); font-size: 14px; border: 1px solid var(--line); background: var(--bg-2); padding: 20px 22px; display: grid; gap: 12px; min-width: 0; }
+  .spec div { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px dashed var(--line); padding-bottom: 10px; }
+  .spec div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .spec span:first-child { color: var(--ink-dim); }
+
+  .shots { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+  .shot { position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--bg-2); min-width: 0; }
+  .shot img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16 / 9; transition: transform .4s ease; }
+  .shot:hover img { transform: scale(1.03); }
+  .shot figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 10px 14px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--ink); background: linear-gradient(0deg, rgba(21,17,14,.85), rgba(21,17,14,0)); }
+  .shot.wide { grid-column: span 12; }
+  .shot.half { grid-column: span 6; }
+  figure { margin: 0; }
+
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
+  .feature { background: var(--bg); padding: 26px 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+  .feature h3 { font-size: 19px; font-weight: 600; letter-spacing: .02em; }
+  .feature p { color: var(--ink-dim); font-size: 15.5px; }
+  .feature .glyph { width: 26px; height: 26px; color: var(--dust); }
+
+  .download { background: var(--bg-2); }
+  .download .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .download h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; margin-bottom: 12px; }
+  .download p { color: var(--ink-dim); max-width: 32em; }
+  .reqs { font-family: var(--mono); font-size: 14px; display: grid; gap: 8px; }
+  .reqs div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; }
+  .reqs span:first-child { color: var(--ink-dim); }
+
+  footer { border-top: 1px solid var(--line); padding-block: 28px; font-family: var(--mono); font-size: 13px; color: var(--ink-dim); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  footer a { color: var(--ink-dim); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 760px) {
+    .nav ul { display: none; }
+    .hero { min-height: 520px; }
+    .hero .wrap { padding-top: 100px; }
+    .about, .download .wrap { grid-template-columns: 1fr; }
+    .features { grid-template-columns: 1fr; }
+    .shot.half { grid-column: span 12; }
+    .reqs div { grid-template-columns: 1fr; gap: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .shot img { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav gutter">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="images/logo.png" alt=""> ECLIPSE</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#screenshots">Screenshots</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#download">Download</a></li>
+    </ul>
+  </div>
+</header>
+
+<section class="hero gutter" id="top">
+  <img class="bg" src="images/shot-dust-ridge.jpg" alt="Three armored figures stand on a ridge above a dust-choked orange valley.">
+  <div class="wrap">
+    <img class="logo" src="images/logo.png" alt="Eclipse logo">
+    <h1>Eclipse</h1>
+    <p class="lede">A low-poly FPS RPG. Loot what you find, gear up, and fight through a world that keeps changing between matches.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="#download">Download</a>
+      <a class="btn ghost" href="#screenshots">See screenshots</a>
+    </div>
+    <p class="status"><b>In development</b> · Windows · Free to play</p>
+  </div>
+</section>
+
+<section class="gutter" id="about">
+  <div class="wrap about">
+    <div>
+      <div class="section-head">
+        <span class="eyebrow">The game</span>
+        <h2>Shoot, loot, and survive in an evolving universe.</h2>
+      </div>
+      <div class="text">
+        <p>Eclipse puts the feel of a classic shooter underneath an RPG. Every crate, corpse and locker in the world can be searched, and what you pull out of it is what you carry into the next fight: weapons, armor, ammo and gear that actually change how you play.</p>
+        <p>The world doesn't reset between matches. Territory shifts, enemies move in, and the places you cleared last time may not be clear now. No two drops into Eclipse play the same way, and the gunplay is tight enough that you'll want to keep going back.</p>
+      </div>
+    </div>
+    <div class="spec" aria-label="At a glance">
+      <div><span>Genre</span><span>FPS RPG</span></div>
+      <div><span>Platform</span><span>Windows</span></div>
+      <div><span>Status</span><span>In development</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="gutter" id="screenshots">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Screenshots</span>
+      <h2>Straight from the build.</h2>
+      <p>No this isn't concept art. That's right, these are in-engine captures from the current version.</p>
+    </div>
+    <div class="shots">
+      <figure class="shot wide">
+        <img src="images/shot-mountain-trail.jpg" alt="Two squadmates with rifles walk a stone path along a steep mountainside above a green valley." loading="lazy">
+        <figcaption>Mountain trail · overworld</figcaption>
+      </figure>
+      <figure class="shot half">
+        <img src="images/shot-dust-ridge.jpg" alt="Squad on a ridge looking into a hazy orange basin." loading="lazy">
+        <figcaption>Dust ridge · overworld</figcaption>
+      </figure>
+      <figure class="shot half">
+        <img src="images/shot-corridor.jpg" alt="A horned soldier fires a tracer down a dark tiled corridor at a pack of advancing creatures." loading="lazy">
+        <figcaption>Facility corridor · interior</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="gutter" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Features</span>
+      <h2>What you're getting into.</h2>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 18l6-9 4 5 3-3 5 7H3z" fill="none"/></svg>
+        <h3>Loot everything</h3>
+        <p>Containers, bodies, caches and gear left behind in the field can all be searched. Build your kit from what the world gives you.</p>
+      </div>
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h12M16 9v6M8 9v6M16 12h4"/></svg>
+        <h3>Gunplay that feels right</h3>
+        <p>Snappy movement, readable recoil, and weapons with real weight behind them. Every gun handles differently, and every hit lands.</p>
+      </div>
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20l5-5 3 3 8-8M4 4h16v16H4z"/></svg>
+        <h3>Low-poly on purpose</h3>
+        <p>Flat shading and pixel textures by design, with modern lighting, fog and draw distance so the scale actually lands.</p>
+      </div>
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+        <h3>An evolving world</h3>
+        <p>The map changes between matches. Factions take ground, new threats spawn in, and the loot moves with them. Nothing stays cleared for long.</p>
+      </div>
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 4h8l2 4v12H6V8l2-4z"/><path d="M9 12h6"/></svg>
+        <h3>Dynamic matches</h3>
+        <p>Objectives, enemy pressure and the state of the world shift mid-match. Plans break, and the game rewards you for adapting on the fly.</p>
+      </div>
+      <div class="feature">
+        <svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h16"/></svg>
+        <h3>Gear that matters</h3>
+        <p>Your loadout is your build. Armor, weapons and attachments change your stats and your options, so what you carry shapes how you fight.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="download gutter" id="download">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Download</span>
+      <h2>Play the current build.</h2>
+      <p>Eclipse is still in development, so expect rough edges. Grab the latest build below, drop in, and send bugs or feedback through the devlog.</p>
+      <div class="cta-row" style="margin-top: 22px;">
+        <a class="btn primary" href="#" rel="noopener">Download for Windows</a>
+        <a class="btn ghost" href="#" rel="noopener">Devlog</a>
+      </div>
+    </div>
+    <div class="reqs" aria-label="System requirements">
+      <div><span>OS</span><span>Windows 10 or later, 64-bit</span></div>
+      <div><span>CPU</span><span>Any quad-core from the last decade</span></div>
+      <div><span>GPU</span><span>Anything that runs DirectX 11</span></div>
+      <div><span>Memory</span><span>4 GB</span></div>
+      <div><span>Storage</span><span>Under 1 GB</span></div>
+      <div><span>Input</span><span>Mouse and keyboard</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="gutter">
+  <div class="wrap">
+    <span>© 2026 Eclipse. All rights reserved.</span>
+    <span><a href="#top">Back to top</a></span>
+  </div>
+</footer>
+</body>
+</html>
